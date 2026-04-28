@@ -1,0 +1,62 @@
+# render.yaml — Blueprint for multi-service deployment (Part B)
+# Render reads this file from the root of your repo and automatically
+# builds & deploys all services on every git push to the default branch.
+# Docs: https://render.com/docs/blueprint-spec
+
+databases:
+  - name: todo-db
+    plan: free
+    databaseName: tododb
+    user: todouser
+
+services:
+  # ─── Backend (Node.js / Express) ───────────────────────────────
+  - type: web
+    name: be-todo
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: DB_HOST
+        fromDatabase:
+          name: todo-db
+          property: host
+      - key: DB_USER
+        fromDatabase:
+          name: todo-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: todo-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: todo-db
+          property: database
+      - key: DB_PORT
+        fromDatabase:
+          name: todo-db
+          property: port
+      - key: DB_SSL
+        value: "true"
+      - key: FRONTEND_URL
+        value: https://fe-todo.onrender.com   # Update with your actual frontend URL
+
+  # ─── Frontend (React + nginx) ──────────────────────────────────
+  - type: web
+    name: fe-todo
+    env: docker
+    dockerfilePath: ./frontend/Dockerfile
+    plan: free
+    dockerContext: ./frontend
+    buildArgs:
+      - key: REACT_APP_API_URL
+        value: https://be-todo.onrender.com   # Update with your actual backend URL
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://be-todo.onrender.com

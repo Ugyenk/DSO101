@@ -1,0 +1,32 @@
+# ===== ENVIRONMENT FILES — NEVER COMMIT =====
+.env
+.env.local
+.env.development
+.env.development.local
+.env.test.local
+.env.production.local
+# Note: .env.production is committed (contains non-secret build-time vars)
+# Secrets must ONLY live in Render's environment variable dashboard
+
+# ===== NODE =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ===== BUILD OUTPUT =====
+build/
+dist/
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== EDITOR =====
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ===== DOCKER =====
+.dockerignore
