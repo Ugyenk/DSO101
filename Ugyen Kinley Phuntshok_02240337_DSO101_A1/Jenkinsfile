@@ -20,7 +20,7 @@ pipeline {
         // Stage 2: Install dependencies for backend
         stage('Install Backend Dependencies') {
             steps {
-                dir('backend') {
+                dir('Ugyen Kinley Phuntshok_02240337_DSO101_A1/backend') {
                     script {
                         if (isUnix()) {
                             sh 'npm install'
@@ -35,7 +35,7 @@ pipeline {
         // Stage 3: Install dependencies for frontend
         stage('Install Frontend Dependencies') {
             steps {
-                dir('frontend') {
+                dir('Ugyen Kinley Phuntshok_02240337_DSO101_A1/frontend') {
                     script {
                         if (isUnix()) {
                             sh 'npm install'
@@ -50,7 +50,7 @@ pipeline {
         // Stage 4: Build frontend
         stage('Build Frontend') {
             steps {
-                dir('frontend') {
+                dir('Ugyen Kinley Phuntshok_02240337_DSO101_A1/frontend') {
                     script {
                         if (isUnix()) {
                             sh 'npm run build'
@@ -67,9 +67,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'docker-compose build'
+                        sh 'cd Ugyen Kinley Phuntshok_02240337_DSO101_A1 && docker-compose build'
                     } else {
-                        bat 'docker-compose build'
+                        bat 'cd Ugyen Kinley Phuntshok_02240337_DSO101_A1 && docker-compose build'
                     }
                 }
             }
