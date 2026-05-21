@@ -21,7 +21,7 @@ pipeline {
         // Stage 2: Install dependencies for backend
         stage('Install Backend Dependencies') {
             steps {
-                dir('backend') {
+                dir('${WORKSPACE_PATH}/backend') {
                     script {
                         if (isUnix()) {
                             sh 'npm install'
@@ -36,7 +36,7 @@ pipeline {
         // Stage 3: Install dependencies for frontend
         stage('Install Frontend Dependencies') {
             steps {
-                dir('frontend') {
+                dir('${WORKSPACE_PATH}/frontend') {
                     script {
                         if (isUnix()) {
                             sh 'npm install'
@@ -51,7 +51,7 @@ pipeline {
         // Stage 4: Build frontend
         stage('Build Frontend') {
             steps {
-                dir('frontend') {
+                dir('${WORKSPACE_PATH}/frontend') {
                     script {
                         if (isUnix()) {
                             sh 'npm run build'
