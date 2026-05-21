@@ -2,7 +2,6 @@ pipeline {
     agent any
     
     environment {
-        WORKSPACE_PATH = 'Ugyen Kinley Phuntshok_02240337_DSO101_A1'
         DOCKER_REGISTRY = 'docker.io'
         DOCKER_CREDENTIALS = 'docker-hub-creds'
     }
@@ -68,9 +67,9 @@ pipeline {
             steps {
                 script {
                     if (isUnix()) {
-                        sh 'cd ${WORKSPACE_PATH} && docker-compose build'
+                        sh 'docker-compose build'
                     } else {
-                        bat 'cd %WORKSPACE_PATH% && docker-compose build'
+                        bat 'docker-compose build'
                     }
                 }
             }
