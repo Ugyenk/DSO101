@@ -11,6 +11,7 @@ services:
     name: be-todo
     env: docker
     dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
     plan: free
     healthCheckPath: /health
     envVars:
@@ -41,18 +42,15 @@ services:
       - key: DB_SSL
         value: "true"
       - key: FRONTEND_URL
-        value: https://fe-todo.onrender.com  
+        value: https://fe-todo.onrender.com
 
   # ─── Frontend (React + nginx) ──────────────────────────────────
   - type: web
     name: fe-todo
     env: docker
     dockerfilePath: ./frontend/Dockerfile
-    plan: free
     dockerContext: ./frontend
-    buildArgs:
-      - key: REACT_APP_API_URL
-        value: https://be-todo.onrender.com   # Update with your actual backend URL
+    plan: free
     envVars:
       - key: REACT_APP_API_URL
         value: https://be-todo.onrender.com
