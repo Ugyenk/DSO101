@@ -31,7 +31,12 @@ jobs:
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend:latest ./Ugyen\ Kinley\ Phuntshok_02240337_DSO101_A1/frontend
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/todo-frontend:latest
 
-      # 5. Deploy to Render.com (via webhook)
-      - name: Trigger Render Deployment
+      # 5. Deploy Backend to Render.com (via webhook)
+      - name: Trigger Render Backend Deployment
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          curl -X POST ${{ secrets.RENDER_BACKEND_WEBHOOK_URL }}
+
+      # 6. Deploy Frontend to Render.com (via webhook)
+      - name: Trigger Render Frontend Deployment
+        run: |
+          curl -X POST ${{ secrets.RENDER_FRONTEND_WEBHOOK_URL }}
