@@ -1,8 +1,4 @@
-# render.yaml — Blueprint for multi-service deployment (Part B)
-# Render reads this file from the root of your repo and automatically
-# builds & deploys all services on every git push to the default branch.
 # Docs: https://render.com/docs/blueprint-spec
-
 databases:
   - name: todo-db
     plan: free
@@ -45,7 +41,7 @@ services:
       - key: DB_SSL
         value: "true"
       - key: FRONTEND_URL
-        value: https://fe-todo.onrender.com   # Update with your actual frontend URL
+        value: https://fe-todo.onrender.com  
 
   # ─── Frontend (React + nginx) ──────────────────────────────────
   - type: web
