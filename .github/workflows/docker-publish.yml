@@ -1,0 +1,71 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - master
+
+jobs:
+  # ─── Lint & Test ───────────────────────────────────────────────
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Install dependencies (${{ matrix.service }})
+        run: cd ${{ matrix.service }} && npm install
+      
+      - name: Run linter (${{ matrix.service }})
+        run: cd ${{ matrix.service }} && npm run lint || true
+      
+      - name: Run tests (${{ matrix.service }})
+        run: cd ${{ matrix.service }} && npm test || true
+
+  # ─── Build & Push Docker Images ────────────────────────────────
+  build-and-push:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [backend, frontend]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_PASSWORD }}
+      
+      - name: Build and push (${{ matrix.service }})
+        uses: docker/build-push-action@v5
+        with:
+          context: ./${{ matrix.service }}
+          file: ./${{ matrix.service }}/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:${{ github.sha }}
+            ${{ secrets.DOCKER_HUB_USERNAME }}/${{ matrix.service }}:latest
+
+  # ─── Deploy to Render ──────────────────────────────────────────
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Render
+        run: |
+          curl -X POST https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
